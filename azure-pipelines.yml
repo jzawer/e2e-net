@@ -11,23 +11,16 @@ pool:
 
 steps:
 - task: CmdLine@2
+  displayName: Intall playwright
   inputs:
     script: 'pwsh bin/Debug/net5.0/playwright.ps1 install'
-# - task: VSTest@2
-#   inputs:
-#     testSelector: 'testAssemblies'
-#     testAssemblyVer2: |
-#       **\*Tests*.dll
-#       !**\*TestAdapter.dll
-#       !**\obj\**
-#       !**\bin\**\ref\**
-#       **\PoC2.dll
-#     searchFolder: '$(System.DefaultWorkingDirectory)'
 - task: CmdLine@2
+  displayName: Run tests
   inputs:
     script: 'dotnet test -l trx'
     failOnStderr: true
 - task: PublishTestResults@2
+  displayName: Publish test results
   inputs:
     testResultsFormat: 'VSTest'
     testResultsFiles: '**/TestResults/*.trx'
