@@ -61,7 +61,6 @@ namespace Poc2
             await Page.WaitForSelectorAsync("#currency-selector-btn");
 
             var currencyListBtn = Page.Locator("#currency-selector-btn");
-            await currencyListBtn.WaitForAsync(new (){ State = WaitForSelectorState.Visible });
             await currencyListBtn.ClickAsync();
             await Expect(currencyListBtn).ToHaveClassAsync(new Regex("active"));
 
@@ -78,7 +77,7 @@ namespace Poc2
             await Page.WaitForSelectorAsync("#lang-selector-btn");
 
             var langListBtn = Page.Locator("#lang-selector-btn");
-            await langListBtn.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await langListBtn.WaitForAsync();
             await langListBtn.ClickAsync();
 
             await Expect(langListBtn).ToHaveClassAsync(new Regex("active"));
@@ -91,11 +90,11 @@ namespace Poc2
 
             // Youtube video loading
             var photosButton = Page.Locator(".hotel-card .image img");
-            await photosButton.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await photosButton.WaitForAsync();
             await photosButton.ClickAsync();
 
             var modalInfoBox = Page.Locator(".modal-wrapper .info-box .box-gallery.active");
-            await modalInfoBox.WaitForAsync(new() { State = WaitForSelectorState.Visible });
+            await modalInfoBox.WaitForAsync();
             await Expect(modalInfoBox).Not.ToBeEmptyAsync();
 
             var videosFilter = modalInfoBox.Locator(".gallery-content .gallery-filters ul li [data-tag-id=\"videos\"]");
@@ -109,6 +108,25 @@ namespace Poc2
             Assert.IsTrue(galleryItemsCount > 0);
             var currentVideo = galleryItems.First.FrameLocator(".ytmedia").Locator("#player");
             await Expect(currentVideo).Not.ToBeEmptyAsync();
+
+            // Select room rate
+            var roomList = Page.Locator(".room-list .b-room-card");
+            await Expect(roomList.First).Not.ToBeEmptyAsync();
+            var roomRates = roomList.First.Locator("b-rate-card");
+            await Expect(roomRates.First).Not.ToBeEmptyAsync();
+            var rateAction = roomRates.First.Locator("a.room0-btn");
+            await rateAction.ClickAsync();
+
+            // Go to Step 2 and check price
+            var sideBar = Page.Locator("#area-sidebar");
+            var finalPriceText = await sideBar.Locator("span.final-price").TextContentAsync();
+            var nextStepBtn = sideBar.Locator("#btn-back");
+            await nextStepBtn.ClickAsync();
+
+            await Expect(Page).ToHaveURLAsync(new Regex("booking.iberostar.com/Reservations/form"));
+
+            var reservationFormFinalPrice = Page.Locator(".content-final-price>.final-price");
+            await Expect(reservationFormFinalPrice).ToHaveTextAsync(finalPriceText);
 
             // Save video to report
             await Page.WaitForTimeoutAsync(1000);
