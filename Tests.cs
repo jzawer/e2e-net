@@ -56,6 +56,8 @@ namespace Poc2
 
             Assert.IsTrue(cookiesConsent.Value == "true");
             var video = Page.Video;
+            var videoPath = await video.PathAsync();
+            TestContext.AddTestAttachment(videoPath);
         }
     }
 }
