@@ -13,4 +13,8 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TestResults\" />
+  </ItemGroup>
+
 </Project>
