@@ -16,5 +16,7 @@ steps:
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\PoC2.dll'
+    testAssemblyVer2: |
+      **\testhost.dll
+      **\PoC2.dll
     searchFolder: '$(System.DefaultWorkingDirectory)'
