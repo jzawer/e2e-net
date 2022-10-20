@@ -17,7 +17,7 @@ steps:
   inputs:
     testSelector: 'testAssemblies'
     testAssemblyVer2: |
-      **\*test*.dll
+      **\*test.dll
       !**\*TestAdapter.dll
       !**\obj\**
       **\PoC2.dll
