@@ -30,6 +30,6 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
-    testResultsFiles: '**/TestResults/*.xml'
+    testResultsFiles: '**/TestResults/*.trx'
     mergeTestResults: true
     failTaskOnFailedTests: true
