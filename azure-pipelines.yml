@@ -18,7 +18,6 @@ steps:
   displayName: Run tests
   inputs:
     script: 'dotnet test -l trx'
-    failOnStderr: true
 - task: PublishTestResults@2
   displayName: Publish test results
   inputs:
