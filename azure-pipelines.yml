@@ -13,14 +13,23 @@ steps:
 - task: CmdLine@2
   inputs:
     script: 'pwsh bin/Debug/net5.0/playwright.ps1 install'
-- task: VSTest@2
+# - task: VSTest@2
+#   inputs:
+#     testSelector: 'testAssemblies'
+#     testAssemblyVer2: |
+#       **\*Tests*.dll
+#       !**\*TestAdapter.dll
+#       !**\obj\**
+#       !**\bin\**\ref\**
+#       **\PoC2.dll
+#     searchFolder: '$(System.DefaultWorkingDirectory)'
+- task: CmdLine@2
   inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: |
-      **\*Tests*.dll
-      !**\*TestAdapter.dll
-      !**\obj\**
-      !**\bin\**\ref\**
-      **\PoC2.dll
-    diagnosticsEnabled: True
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    script: 'dotnet test -l trx'
+    failOnStderr: true
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/TestResults/*.trx'
+    mergeTestResults: true
+    failTaskOnFailedTests: true
