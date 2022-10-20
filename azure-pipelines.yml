@@ -22,4 +22,5 @@ steps:
       !**\obj\**
       !**\bin\**\ref\**
       **\PoC2.dll
+    diagnosticsEnabled: True
     searchFolder: '$(System.DefaultWorkingDirectory)'
