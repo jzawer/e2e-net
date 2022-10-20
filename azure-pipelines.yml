@@ -7,7 +7,7 @@ trigger:
 - PoC/net
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 steps:
 - task: VSTest@2
