@@ -12,7 +12,7 @@ pool:
 steps:
 - task: CmdLine@2
   inputs:
-    script: 'pwsh bin/Debug/netX/playwright.ps1 install'
+    script: 'pwsh bin/Debug/net5.0/playwright.ps1 install'
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
