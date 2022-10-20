@@ -10,6 +10,9 @@ pool:
   vmImage: windows-latest
 
 steps:
+- task: CmdLine@2
+  inputs:
+    script: 'pwsh bin/Debug/netX/playwright.ps1 install'
 - task: VSTest@2
   inputs:
     testSelector: 'testAssemblies'
