@@ -13,9 +13,9 @@ namespace Poc2
     [TestFixture]
     public class Tests : PageTest
     {
-        const string domian = "https://presentaciones.stage.iberostar.com";
+        const string domain = "https://pre3.stage.iberostar.com";
         const string view = "Reservations/availability";
-        readonly string baseURL = $"{domian}/{view}?codiconc=24&conccodi=76&cp_tealium=&idiomercodi=es&numerohabitaciones=1&ok_promo=0&origen_soporte=IBE&search_origin=hotel&Cp=GOOGLEES&edP0_0=30&edadpersona0_0=30&edP0_1=30&edadpersona0_1=30&adultohab0=2&ninohab0=0&bebehab0=0&numeropersonas0=2&utm_source=pruebas_prm&utm_medium=pruebas_prm&utm_campaign=pruebas_prm";
+        readonly string baseURL = $"{domain}/{view}?codiconc=24&conccodi=76&cp_tealium=&idiomercodi=es&numerohabitaciones=1&ok_promo=0&origen_soporte=IBE&search_origin=hotel&Cp=GOOGLEES&edP0_0=30&edadpersona0_0=30&edP0_1=30&edadpersona0_1=30&adultohab0=2&ninohab0=0&bebehab0=0&numeropersonas0=2&utm_source=pruebas_prm&utm_medium=pruebas_prm&utm_campaign=pruebas_prm";
         string currentUrl = "";
 
         public override BrowserNewContextOptions ContextOptions()
@@ -27,7 +27,7 @@ namespace Poc2
         }
 
         [SetUp]
-        public void Setup()
+        public async Task Setup()
         {
             var today = DateTime.Now;
             var initDate = new DateTime(today.Ticks).AddDays(30);
@@ -39,59 +39,87 @@ namespace Poc2
             var regionCode = 1; // espaniol
             var regionCodeQuery = $"&idiocodi={regionCode}";
             currentUrl = baseURL + initDateQuery + endDateQuery + currencyCodeQuery + regionCodeQuery;
+
+            await Context.Tracing.StartAsync(new()
+            {
+                Screenshots = true,
+                Snapshots = true,
+                Sources = true
+            });
+        }
+
+        [TearDown]
+        public async Task TearDown()
+        {
+            // Save video to report
+            await Page.WaitForTimeoutAsync(1000);
+            var video = Page.Video;
+            var videoPath = await video.PathAsync();
+            TestContext.AddTestAttachment(videoPath, "video del test");
+
+            await Context.Tracing.StopAsync(new()
+            {
+                Path = "trace.zip"
+            });
         }
 
         [Test]
-        public async Task Emea_B2C_1_2_EUR()
+        public async Task Emea_B2C_1_2_EUR_CheckCookies()
         {
             await Page.GotoAsync(currentUrl);
+            await TestsHelpers.AcceptCookies(Page);
 
-            // Accept Cookies
-            await Page.WaitForSelectorAsync("#agree-cookies");
-            var cookieButton = Page.Locator("#agree-cookies");
-            await cookieButton.ClickAsync();
-
-            await Expect(Page).ToHaveURLAsync(currentUrl);
-            
-            var cookies = await Page.Context.CookiesAsync(new List<string> { domian });
+            var cookies = await Page.Context.CookiesAsync(new List<string> { domain });
             var cookiesConsent = cookies.FirstOrDefault(c => c.Name == "cookies_consent");
             Assert.IsTrue(cookiesConsent.Value == "true");
+        }
 
-            // Currency change
-            await Page.WaitForSelectorAsync("#currency-selector-btn");
+        [Test]
+        public async Task Emea_B2C_1_2_EUR_ChangeCurrency()
+        {
+            await Page.GotoAsync(currentUrl);
+            await TestsHelpers.AcceptCookies(Page);
 
-            var currencyListBtn = Page.Locator("#currency-selector-btn");
-            await currencyListBtn.ClickAsync();
+            var currencyListBtn = await TestsHelpers.LocatorAndClick(Page, "#currency-selector-btn");
             await Expect(currencyListBtn).ToHaveClassAsync(new Regex("active"));
 
-            var currencyPanel = Page.Locator("#currencies-panel");
-            await currencyPanel.GetByText("USD").ClickAsync();
+            await Page.RunAndWaitForNavigationAsync(async () =>
+            {
+                await Page.Locator("#currencies-panel").GetByText("USD").ClickAsync();
+            });
 
             var currencyRegex = new Regex("USD");
             await Expect(Page).ToHaveURLAsync(currencyRegex);
 
             var currencyTotalText = Page.Locator(".final-price");
             await Expect(currencyTotalText).ToHaveTextAsync(currencyRegex);
+        }
 
-            // Region Change
-            await Page.WaitForSelectorAsync("#lang-selector-btn");
+        [Test]
+        public async Task Emea_B2C_1_2_EUR_ChangeRegion()
+        {
+            await Page.GotoAsync(currentUrl);
+            await TestsHelpers.AcceptCookies(Page);
 
-            var langListBtn = Page.Locator("#lang-selector-btn");
-            await langListBtn.WaitForAsync();
-            await langListBtn.ClickAsync();
-
+            var langListBtn = await TestsHelpers.LocatorAndClick(Page, "#lang-selector-btn");
             await Expect(langListBtn).ToHaveClassAsync(new Regex("active"));
 
-            var langPanel = Page.Locator("#panel-lang");
-            await langPanel.GetByText("English").ClickAsync();
+            await Page.RunAndWaitForNavigationAsync(async () =>
+            {
+                await Page.Locator("#panel-lang").GetByText("English").ClickAsync();
+            });
 
             await Expect(Page).ToHaveURLAsync(new Regex("&idiocodi=2"));
             await Expect(Page.Locator("#lang-selector-btn")).ToHaveTextAsync(new Regex("English"));
+        }
 
-            // Youtube video loading
-            var photosButton = Page.Locator(".hotel-card .image img");
-            await photosButton.WaitForAsync();
-            await photosButton.ClickAsync();
+        [Test]
+        public async Task Emea_B2C_1_2_EUR_LoadYoutubeVideoInGallery()
+        {
+            await Page.GotoAsync(currentUrl);
+            await TestsHelpers.AcceptCookies(Page);
+
+            await TestsHelpers.LocatorAndClick(Page, ".hotel-card .image img");
 
             var modalInfoBox = Page.Locator(".modal-wrapper .info-box .box-gallery.active");
             await modalInfoBox.WaitForAsync();
@@ -108,31 +136,35 @@ namespace Poc2
             Assert.IsTrue(galleryItemsCount > 0);
             var currentVideo = galleryItems.First.FrameLocator(".ytmedia").Locator("#player");
             await Expect(currentVideo).Not.ToBeEmptyAsync();
+        }
+
+        [Test]
+        public async Task Emea_B2C_1_2_EUR_SelectRoomAndContinueToStep2()
+        {
+            await Page.GotoAsync(currentUrl);
+            await TestsHelpers.AcceptCookies(Page);
 
             // Select room rate
+            await Page.WaitForSelectorAsync(".room-list");
             var roomList = Page.Locator(".room-list .b-room-card");
             await Expect(roomList.First).Not.ToBeEmptyAsync();
-            var roomRates = roomList.First.Locator("b-rate-card");
+            var roomRates = roomList.First.Locator(".b-rate-card");
             await Expect(roomRates.First).Not.ToBeEmptyAsync();
-            var rateAction = roomRates.First.Locator("a.room0-btn");
-            await rateAction.ClickAsync();
+            await roomRates.First.Locator(".action").ClickAsync();
+            await Expect(roomRates.First).ToHaveClassAsync(new Regex("selected"));
 
             // Go to Step 2 and check price
-            var sideBar = Page.Locator("#area-sidebar");
+            var sideBar = Page.Locator("#divStickyBreakdown");
             var finalPriceText = await sideBar.Locator("span.final-price").TextContentAsync();
+            double.TryParse(finalPriceText.Split(" ")[0], out double finalPrice);
+            finalPrice = Math.Round(finalPrice);
             var nextStepBtn = sideBar.Locator("#btn-back");
             await nextStepBtn.ClickAsync();
 
-            await Expect(Page).ToHaveURLAsync(new Regex("booking.iberostar.com/Reservations/form"));
+            await Page.WaitForURLAsync(new Regex($"{domain}/Reservations/form"));
 
-            var reservationFormFinalPrice = Page.Locator(".content-final-price>.final-price");
-            await Expect(reservationFormFinalPrice).ToHaveTextAsync(finalPriceText);
-
-            // Save video to report
-            await Page.WaitForTimeoutAsync(1000);
-            var video = Page.Video;
-            var videoPath = await video.PathAsync();
-            TestContext.AddTestAttachment(videoPath, "video del test");
+            var finalPriceSidePanel = Page.Locator(".b-side-final-price .content-final-price .final-price");
+            await Expect(finalPriceSidePanel).ToHaveTextAsync(new Regex(finalPrice.ToString()));
         }
     }
 }

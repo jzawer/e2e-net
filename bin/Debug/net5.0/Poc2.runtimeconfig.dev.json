@@ -1,8 +1,0 @@
-{
-  "runtimeOptions": {
-    "additionalProbingPaths": [
-      "C:\\Users\\j.otero\\.dotnet\\store\\|arch|\\|tfm|",
-      "C:\\Users\\j.otero\\.nuget\\packages"
-    ]
-  }
-}

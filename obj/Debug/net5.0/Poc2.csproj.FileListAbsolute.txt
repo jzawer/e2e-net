@@ -377,7 +377,6 @@ C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\zh-Hans\Microsoft.VisualStudio.Te
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\zh-Hant\Microsoft.TestPlatform.CommunicationUtilities.resources.dll
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\zh-Hant\Microsoft.TestPlatform.CrossPlatEngine.resources.dll
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\zh-Hant\Microsoft.VisualStudio.TestPlatform.Common.resources.dll
-C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.csprojAssemblyReference.cache
 C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.GeneratedMSBuildEditorConfig.editorconfig
 C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.AssemblyInfoInputs.cache
 C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.AssemblyInfo.cs
@@ -387,3 +386,4 @@ C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.dll
 C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\ref\Poc2.dll
 C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.pdb
 C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.genruntimeconfig.cache
+C:\Users\j.otero\Desktop\PoC2\obj\Debug\net5.0\Poc2.csproj.AssemblyReference.cache
