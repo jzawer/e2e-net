@@ -293,7 +293,6 @@ C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\Poc2.deps.json
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\Poc2.runtimeconfig.json
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\Poc2.runtimeconfig.dev.json
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\Poc2.dll
-C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\ref\Poc2.dll
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\Poc2.pdb
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll
 C:\Users\j.otero\Desktop\Poc2\bin\Debug\net5.0\Microsoft.VisualStudio.CodeCoverage.Shim.dll
@@ -387,3 +386,4 @@ C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\ref\Poc2.dll
 C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.pdb
 C:\Users\j.otero\Desktop\Poc2\obj\Debug\net5.0\Poc2.genruntimeconfig.cache
 C:\Users\j.otero\Desktop\PoC2\obj\Debug\net5.0\Poc2.csproj.AssemblyReference.cache
+C:\Users\j.otero\Desktop\PoC2\obj\Debug\net5.0\refint\Poc2.dll
