@@ -16,6 +16,7 @@ steps:
     script: 'pwsh bin/Debug/net5.0/playwright.ps1 install'
 - task: CmdLine@2
   displayName: Run tests
+  continueOnError: true
   inputs:
     script: 'dotnet test -l trx'
 - task: PublishTestResults@2
